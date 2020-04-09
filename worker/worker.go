@@ -88,7 +88,7 @@ func (w *Worker) Stopping(_ error) error {
 }
 
 // watchDNSLoop watches for changes in DNS and starts or stops workers.
-func (w *Worker) watchDNSLoop(servCtx context.Context) error {
+func (w *Worker) WatchDNSLoop(servCtx context.Context) error {
 	go func() {
 		// Close the watcher, when this service is asked to stop.
 		// Closing the watcher makes watchDNSLoop exit, since it only iterates on watcher updates, and has no other
