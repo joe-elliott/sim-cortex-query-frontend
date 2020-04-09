@@ -83,15 +83,15 @@ func main() {
 	}
 
 	// start worker
-	wg.Add(1)
+	ctx, cancel := context.WithCancel(context.Background())
 	go func() {
-		err = w.WatchDNSLoop(context.Background())
+		err = w.WatchDNSLoop(ctx)
 		if err != nil {
 			panic(err)
 		}
-		wg.Done()
 	}()
 
 	wg.Wait()
+	cancel()
 	w.Stopping(nil)
 }
