@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
+	"strconv"
 	"sync"
 	"time"
 
@@ -177,12 +178,17 @@ func (w *Worker) process(c frontend.Frontend_ProcessClient) error {
 	defer cancel()
 
 	for {
-		_, err := c.Recv()
+		req, err := c.Recv()
 		if err != nil {
 			return err
 		}
 
-		time.Sleep(100 * time.Millisecond)
+		milli, err := strconv.Atoi(string(req.HttpRequest.Body))
+		if err != nil {
+			milli = 100
+		}
+
+		time.Sleep(time.Duration(milli) * time.Millisecond)
 		level.Error(w.log).Log("msg", "did work")
 
 		err = c.Send(&frontend.ProcessResponse{
