@@ -30,6 +30,7 @@ func main() {
 		GPRCServerMaxRecvMsgSize:       10 * 1024 * 1024,
 		GRPCServerMaxSendMsgSize:       10 * 1024 * 1024,
 		GPRCServerMaxConcurrentStreams: 100,
+		RegisterInstrumentation:        true,
 	}
 	serv, err := server.New(servCfg)
 	if err != nil {
@@ -54,7 +55,7 @@ func main() {
 	})
 
 	frontend.RegisterFrontendServer(serv.GRPC, f)
-	serv.HTTP.PathPrefix("/").Handler(authMiddleware.Wrap(f.Handler()))
+	serv.HTTP.Path("/").Handler(authMiddleware.Wrap(f.Handler()))
 
 	// start frontend
 	wg := sync.WaitGroup{}
