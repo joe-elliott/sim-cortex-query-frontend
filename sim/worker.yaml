@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    name: worker
+  name: worker
+spec:
+  selector:
+    matchLabels:
+      name: worker
+  template:
+    metadata:
+      labels:
+        name: worker
+    spec:
+      containers:
+      - name: worker
+        image: registry.local:5000/sim-worker:latest
+        imagePullPolicy: Always
+        command: ["./app"]
+        args:
+        - -query-frontend-address=frontend:9095

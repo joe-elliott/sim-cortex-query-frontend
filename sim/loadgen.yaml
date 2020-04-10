@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    name: loadgen
+  name: loadgen
+spec:
+  selector:
+    matchLabels:
+      name: loadgen
+  template:
+    metadata:
+      labels:
+        name: loadgen
+    spec:
+      containers:
+      - name: loadgen
+        image: registry.local:5000/sim-loadgen:latest
+        imagePullPolicy: Always
+        command: ["./app"]
+        args:
+        - -querier-address=http://frontend:3100
