@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"os"
 	"os/signal"
 	"time"
@@ -10,10 +11,20 @@ import (
 	"github.com/cortexproject/cortex/pkg/util/grpcclient"
 )
 
+var (
+	queryFrontendAddress string
+)
+
+func init() {
+	flag.StringVar(&queryFrontendAddress, "query-frontend-address", "localhost:9095", "Address to connect to for query frontend.")
+}
+
 func main() {
+	flag.Parse()
+
 	// worker
 	workerCfg := WorkerConfig{
-		Address:           "localhost:9095",
+		Address:           queryFrontendAddress,
 		Parallelism:       10,
 		DNSLookupDuration: 10 * time.Second,
 		GRPCClientConfig: grpcclient.Config{
