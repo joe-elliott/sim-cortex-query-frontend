@@ -20,3 +20,7 @@ spec:
         command: ["./app"]
         args:
         - -querier-address=http://frontend:3100
+        ports:
+        - containerPort: 3100
+          name: http-metrics
+          protocol: TCP
