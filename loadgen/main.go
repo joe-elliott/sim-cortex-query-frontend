@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 
 	"go.uber.org/ratelimit"
 )
@@ -35,6 +36,14 @@ func main() {
 
 	closeChan := make(chan struct{}, 0)
 
+	tenantName, err := os.Hostname()
+	if err != nil {
+		fmt.Printf("hostname err: %v\n", err)
+		panic(err)
+	}
+
+	client := &http.Client{Timeout: time.Second * 5}
+
 	wg := sync.WaitGroup{}
 	wg.Add(workers)
 	for i := 0; i < workers; i++ {
@@ -48,10 +57,19 @@ func main() {
 					}
 				default:
 					limiter.Take()
-					_, err := http.Post(querierAddress, "text", strings.NewReader(duration))
+					req, err := http.NewRequest("POST", querierAddress, strings.NewReader(duration))
+					if err != nil {
+						fmt.Printf("newReq : %v\n", err)
+						continue
+					}
+
+					req.Header.Set("X-Scope-OrgID", tenantName)
+
+					resp, err := client.Do(req)
 					if err != nil {
 						fmt.Printf("wups : %v\n", err)
 					}
+					defer resp.Body.Close()
 				}
 
 			}

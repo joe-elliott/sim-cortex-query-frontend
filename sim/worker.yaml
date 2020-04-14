@@ -20,3 +20,4 @@ spec:
         command: ["./app"]
         args:
         - -query-frontend-address=frontend:9095
+        
