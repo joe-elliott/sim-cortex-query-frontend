@@ -18,6 +18,10 @@ spec:
         image: registry.local:5000/sim-frontend:latest
         imagePullPolicy: Always
         command: ["./app"]
+        ports:
+        - containerPort: 3100
+          name: http-metrics
+          protocol: TCP
 ---
 apiVersion: v1
 kind: Service
