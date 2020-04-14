@@ -4,3 +4,7 @@ k3d create --enable-registry --name "cortex-sim"
 ../build.sh
 
 kc create -f .
+
+```
+histogram_quantile(.5, sum(rate(cortex_query_frontend_queue_duration_seconds_bucket[1m])) by (le))
+```
