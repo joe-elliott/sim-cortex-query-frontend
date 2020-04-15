@@ -117,13 +117,13 @@ func (w *Worker) WatchDNSLoop(servCtx context.Context) error {
 		for _, update := range updates {
 			switch update.Op {
 			case naming.Add:
-				level.Debug(w.log).Log("msg", "adding connection", "addr", update.Addr)
+				fmt.Println("adding connection: ", update.Addr)
 				ctx, cancel := context.WithCancel(servCtx)
 				cancels[update.Addr] = cancel
 				w.runMany(ctx, update.Addr)
 
 			case naming.Delete:
-				level.Debug(w.log).Log("msg", "removing connection", "addr", update.Addr)
+				fmt.Println("removing connection: ", update.Addr)
 				if cancel, ok := cancels[update.Addr]; ok {
 					cancel()
 				}
@@ -139,7 +139,7 @@ func (w *Worker) WatchDNSLoop(servCtx context.Context) error {
 func (w *Worker) runMany(ctx context.Context, address string) {
 	client, err := w.connect(address)
 	if err != nil {
-		level.Error(w.log).Log("msg", "error connecting", "addr", address, "err", err)
+		fmt.Println("error connecting: ", address, err)
 		return
 	}
 
@@ -158,13 +158,13 @@ func (w *Worker) runOne(ctx context.Context, client frontend.FrontendClient) {
 	for backoff.Ongoing() {
 		c, err := client.Process(ctx)
 		if err != nil {
-			level.Error(w.log).Log("msg", "error contacting frontend", "err", err)
+			fmt.Println("error contacting frontend: ", err)
 			backoff.Wait()
 			continue
 		}
 
 		if err := w.process(c); err != nil {
-			level.Error(w.log).Log("msg", "error processing requests", "err", err)
+			fmt.Println("error processing requests: ", err)
 			backoff.Wait()
 			continue
 		}
@@ -196,7 +196,6 @@ func (w *Worker) process(c frontend.Frontend_ProcessClient) error {
 		}
 
 		time.Sleep(sleep * time.Millisecond)
-		level.Error(w.log).Log("msg", "did work")
 
 		err = c.Send(&frontend.ProcessResponse{
 			HttpResponse: &httpgrpc.HTTPResponse{
@@ -205,7 +204,7 @@ func (w *Worker) process(c frontend.Frontend_ProcessClient) error {
 			},
 		})
 		if err != nil {
-			level.Error(w.log).Log("msg", "error sending response", "err", err)
+			fmt.Println("error sending response: ", err)
 		}
 	}
 }
