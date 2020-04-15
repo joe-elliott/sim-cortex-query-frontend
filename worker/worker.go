@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"math/rand"
 	"net/http"
 	"strconv"
 	"sync"
@@ -35,7 +36,8 @@ type WorkerConfig struct {
 	Parallelism       int           `yaml:"parallelism"`
 	DNSLookupDuration time.Duration `yaml:"dns_lookup_duration"`
 
-	GRPCClientConfig grpcclient.Config `yaml:"grpc_client_config"`
+	GRPCClientConfig  grpcclient.Config `yaml:"grpc_client_config"`
+	StandardDeviation float64
 }
 
 // RegisterFlags adds the flags required to config this to the given FlagSet.
@@ -188,7 +190,12 @@ func (w *Worker) process(c frontend.Frontend_ProcessClient) error {
 			milli = 100
 		}
 
-		time.Sleep(time.Duration(milli) * time.Millisecond)
+		sleep := time.Duration(rand.NormFloat64()*w.cfg.StandardDeviation + float64(milli))
+		if sleep < 0 {
+			sleep = 0
+		}
+
+		time.Sleep(sleep * time.Millisecond)
 		level.Error(w.log).Log("msg", "did work")
 
 		err = c.Send(&frontend.ProcessResponse{

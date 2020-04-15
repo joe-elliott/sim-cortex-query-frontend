@@ -13,10 +13,12 @@ import (
 
 var (
 	queryFrontendAddress string
+	standardDeviation    float64
 )
 
 func init() {
 	flag.StringVar(&queryFrontendAddress, "query-frontend-address", "localhost:9095", "Address to connect to for query frontend.")
+	flag.FloatVar(&standardDeviation, "standard-dev", 20, "Standard deviation to apply to query duration.")
 }
 
 func main() {
@@ -31,6 +33,7 @@ func main() {
 			MaxRecvMsgSize: 10 * 1024 * 1024,
 			MaxSendMsgSize: 10 * 1024 * 1024,
 		},
+		StandardDeviation: standardDeviation,
 	}
 	w, err := NewWorker(workerCfg, util.Logger)
 	if err != nil {
