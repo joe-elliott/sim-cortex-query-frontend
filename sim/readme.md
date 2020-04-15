@@ -12,6 +12,7 @@ rate(loadgen_latency_count[1m])
 cortex_query_frontend_queue_length
 ```
 
+worker is not correctly detecting new query frontends.  force roll it for now
 ```
-kc scale --replicas=? deployment/frontend && kc rollout restart deployment/worker
+kc scale --replicas=? deployment/frontend && sleep 5 && kc rollout restart deployment/worker
 ```
