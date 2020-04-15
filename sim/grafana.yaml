@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    name: grafana
+  name: grafana
+spec:
+  minReadySeconds: 10
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      name: grafana
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        grafana-config-hash: f7201a4bf2e0c556a351605e549a125c
+      creationTimestamp: null
+      labels:
+        name: grafana
+    spec:
+      containers:
+      - env:
+        - name: GF_PATHS_CONFIG
+          value: /etc/grafana-config/grafana.ini
+        image: grafana/grafana:latest
+        imagePullPolicy: IfNotPresent
+        name: grafana
+        ports:
+        - containerPort: 3000
+          name: grafana-metrics
+          protocol: TCP
+        volumeMounts:
+        - mountPath: /etc/grafana-config
+          name: grafana-config
+        - mountPath: /etc/grafana/provisioning/datasources
+          name: grafana-datasources
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: grafana-config
+        name: grafana-config
+      - configMap:
+          defaultMode: 420
+          name: grafana-dashboard-provisioning
+        name: grafana-dashboard-provisioning
+      - configMap:
+          defaultMode: 420
+          name: grafana-datasources
+        name: grafana-datasources
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-config
+data:
+  grafana.ini: |
+    [analytics]
+    reporting_enabled = false
+    [auth.anonymous]
+    enabled = true
+    org_role = Admin
+    [explore]
+    enabled = true
+    [server]
+    http_port = 3000
+    [users]
+    default_theme = light
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+data:
+  prometheus.yml: |
+    apiVersion: 1
+    datasources:
+      - access: proxy
+        editable: false
+        isDefault: true
+        jsonData:
+            httpMethod: GET
+        name: prometheus
+        type: prometheus
+        url: http://prometheus
+        version: 1

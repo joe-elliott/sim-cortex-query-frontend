@@ -29,6 +29,21 @@ spec:
           name: prom
         name: prometheus-config
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: prometheus
+  name: prometheus
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    name: prometheus
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
