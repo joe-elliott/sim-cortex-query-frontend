@@ -1,26 +1,59 @@
+# heavy-user executes 50 queries a second that take 100 ms each
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    name: loadgen
-  name: loadgen
+    name: heavy-user
+  name: heavy-user
 spec:
   selector:
     matchLabels:
-      name: loadgen
+      name: heavy-user
   template:
     metadata:
       labels:
-        name: loadgen
+        name: heavy-user
     spec:
       containers:
-      - name: loadgen
+      - name: heavy-user
         image: registry.local:5000/sim-loadgen:latest
         imagePullPolicy: Always
         command: ["./app"]
         args:
         - -querier-address=http://frontend:3100
+        - -queries-per-second=50
         ports:
         - containerPort: 3100
           name: http-metrics
           protocol: TCP
+---
+# light-user executes 1 queries a second that take 100 ms each
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    name: light-user
+  name: light-user
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: light-user
+  template:
+    metadata:
+      labels:
+        name: light-user
+    spec:
+      containers:
+      - name: light-user
+        image: registry.local:5000/sim-loadgen:latest
+        imagePullPolicy: Always
+        command: ["./app"]
+        args:
+        - -querier-address=http://frontend:3100
+        - -queries-per-second=1
+        ports:
+        - containerPort: 3100
+          name: http-metrics
+          protocol: TCP
+
