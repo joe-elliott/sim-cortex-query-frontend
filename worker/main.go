@@ -18,7 +18,7 @@ var (
 
 func init() {
 	flag.StringVar(&queryFrontendAddress, "query-frontend-address", "localhost:9095", "Address to connect to for query frontend.")
-	flag.FloatVar(&standardDeviation, "standard-dev", 20, "Standard deviation to apply to query duration.")
+	flag.Float64Var(&standardDeviation, "standard-dev", 20, "Standard deviation to apply to query duration.")
 }
 
 func main() {
