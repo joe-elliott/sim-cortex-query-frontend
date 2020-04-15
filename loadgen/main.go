@@ -96,6 +96,7 @@ func main() {
 					resp, err := client.Do(req)
 					if err != nil {
 						fmt.Printf("wups : %v\n", err)
+						continue
 					}
 					latency.WithLabelValues(tenantName).Observe(time.Since(start).Seconds())
 					resp.Body.Close()
