@@ -27,7 +27,7 @@ var (
 		Namespace: "loadgen",
 		Name:      "latency",
 		Help:      "latency",
-		Buckets:   prometheus.LinearBuckets(0, .25, 20),
+		Buckets:   prometheus.LinearBuckets(0, .1, 40),
 	}, []string{"tenant"})
 )
 
