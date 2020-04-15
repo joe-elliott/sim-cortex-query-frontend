@@ -457,7 +457,7 @@
         "timeFrom": null,
         "timeRegions": [],
         "timeShift": null,
-        "title": "queue len",
+        "title": "time in queue",
         "tooltip": {
           "shared": true,
           "sort": 0,
