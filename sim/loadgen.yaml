@@ -6,6 +6,7 @@ metadata:
     name: heavy-user
   name: heavy-user
 spec:
+  replicas: 2
   selector:
     matchLabels:
       name: heavy-user
