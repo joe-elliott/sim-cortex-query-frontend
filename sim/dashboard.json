@@ -59,19 +59,19 @@
         "steppedLine": false,
         "targets": [
           {
-            "expr": "histogram_quantile(.99, sum(rate(loadgen_latency_bucket[1m])) by (le, tenant))",
+            "expr": "histogram_quantile(.99, sum(rate(loadgen_latency_bucket{tenant=~'heavy-user.*'}[1m])) by (le, tenant))",
             "interval": "",
             "legendFormat": "",
             "refId": "A"
           },
           {
-            "expr": "histogram_quantile(.9, sum(rate(loadgen_latency_bucket[1m])) by (le, tenant))",
+            "expr": "histogram_quantile(.9, sum(rate(loadgen_latency_bucket{tenant=~'heavy-user.*'}[1m])) by (le, tenant))",
             "interval": "",
             "legendFormat": "",
             "refId": "B"
           },
           {
-            "expr": "histogram_quantile(.5, sum(rate(loadgen_latency_bucket[1m])) by (le, tenant))",
+            "expr": "histogram_quantile(.5, sum(rate(loadgen_latency_bucket{tenant=~'heavy-user.*'}[1m])) by (le, tenant))",
             "interval": "",
             "legendFormat": "",
             "refId": "C"
@@ -123,17 +123,17 @@
         "bars": false,
         "dashLength": 10,
         "dashes": false,
-        "datasource": null,
+        "datasource": "prometheus",
         "fill": 1,
         "fillGradient": 0,
         "gridPos": {
-          "h": 8,
+          "h": 9,
           "w": 12,
           "x": 12,
           "y": 0
         },
         "hiddenSeries": false,
-        "id": 4,
+        "id": 7,
         "legend": {
           "avg": false,
           "current": false,
@@ -159,17 +159,29 @@
         "steppedLine": false,
         "targets": [
           {
-            "expr": "cortex_query_frontend_queue_length",
+            "expr": "histogram_quantile(.99, sum(rate(loadgen_latency_bucket{tenant=~'light-user.*'}[1m])) by (le, tenant))",
             "interval": "",
             "legendFormat": "",
             "refId": "A"
+          },
+          {
+            "expr": "histogram_quantile(.9, sum(rate(loadgen_latency_bucket{tenant=~'light-user.*'}[1m])) by (le, tenant))",
+            "interval": "",
+            "legendFormat": "",
+            "refId": "B"
+          },
+          {
+            "expr": "histogram_quantile(.5, sum(rate(loadgen_latency_bucket{tenant=~'light-user.*'}[1m])) by (le, tenant))",
+            "interval": "",
+            "legendFormat": "",
+            "refId": "C"
           }
         ],
         "thresholds": [],
         "timeFrom": null,
         "timeRegions": [],
         "timeShift": null,
-        "title": "queue len",
+        "title": "latency",
         "tooltip": {
           "shared": true,
           "sort": 0,
@@ -258,6 +270,94 @@
         "timeRegions": [],
         "timeShift": null,
         "title": "qps",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": null,
+        "fill": 1,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 9
+        },
+        "hiddenSeries": false,
+        "id": 4,
+        "legend": {
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "nullPointMode": "null",
+        "options": {
+          "dataLinks": []
+        },
+        "percentage": false,
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "cortex_query_frontend_queue_length",
+            "interval": "",
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "queue len",
         "tooltip": {
           "shared": true,
           "sort": 0,
