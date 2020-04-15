@@ -61,19 +61,19 @@
           {
             "expr": "histogram_quantile(.99, sum(rate(loadgen_latency_bucket{tenant=~'heavy-user.*'}[1m])) by (le, tenant))",
             "interval": "",
-            "legendFormat": "",
+            "legendFormat": ".99-{{tenant}}",
             "refId": "A"
           },
           {
             "expr": "histogram_quantile(.9, sum(rate(loadgen_latency_bucket{tenant=~'heavy-user.*'}[1m])) by (le, tenant))",
             "interval": "",
-            "legendFormat": "",
+            "legendFormat": ".9-{{tenant}}",
             "refId": "B"
           },
           {
             "expr": "histogram_quantile(.5, sum(rate(loadgen_latency_bucket{tenant=~'heavy-user.*'}[1m])) by (le, tenant))",
             "interval": "",
-            "legendFormat": "",
+            "legendFormat": ".5-{{tenant}}",
             "refId": "C"
           }
         ],
@@ -161,19 +161,19 @@
           {
             "expr": "histogram_quantile(.99, sum(rate(loadgen_latency_bucket{tenant=~'light-user.*'}[1m])) by (le, tenant))",
             "interval": "",
-            "legendFormat": "",
+            "legendFormat": ".99",
             "refId": "A"
           },
           {
             "expr": "histogram_quantile(.9, sum(rate(loadgen_latency_bucket{tenant=~'light-user.*'}[1m])) by (le, tenant))",
             "interval": "",
-            "legendFormat": "",
+            "legendFormat": ".9.",
             "refId": "B"
           },
           {
             "expr": "histogram_quantile(.5, sum(rate(loadgen_latency_bucket{tenant=~'light-user.*'}[1m])) by (le, tenant))",
             "interval": "",
-            "legendFormat": "",
+            "legendFormat": ".5",
             "refId": "C"
           }
         ],
@@ -261,7 +261,7 @@
           {
             "expr": "rate(loadgen_latency_count[1m])",
             "interval": "",
-            "legendFormat": "",
+            "legendFormat": "{{tenant}}",
             "refId": "A"
           }
         ],
@@ -351,6 +351,106 @@
             "interval": "",
             "legendFormat": "",
             "refId": "A"
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "queue len",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": null,
+        "fill": 1,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 17
+        },
+        "hiddenSeries": false,
+        "id": 9,
+        "legend": {
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "nullPointMode": "null",
+        "options": {
+          "dataLinks": []
+        },
+        "percentage": false,
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "expr": "histogram_quantile(.99, sum(rate(cortex_query_frontend_queue_duration_seconds_bucket[1m])) by (le))",
+            "interval": "",
+            "legendFormat": ".99",
+            "refId": "A"
+          },
+          {
+            "expr": "histogram_quantile(.9, sum(rate(cortex_query_frontend_queue_duration_seconds_bucket[1m])) by (le))",
+            "interval": "",
+            "legendFormat": ".9",
+            "refId": "B"
+          },
+          {
+            "expr": "histogram_quantile(.5, sum(rate(cortex_query_frontend_queue_duration_seconds_bucket[1m])) by (le))",
+            "interval": "",
+            "legendFormat": ".5",
+            "refId": "C"
           }
         ],
         "thresholds": [],
